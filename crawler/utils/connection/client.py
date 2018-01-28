@@ -56,6 +56,7 @@ class Client:
         """
         logger.debug("Connecting to host...")
         self.socket.connect((self.host, self.port))
+        logger.debug("Connected to {}!".format(self.host))
 
     def send_package(self, package):
         """

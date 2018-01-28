@@ -1,4 +1,8 @@
 import wiringpi
+import logging
+
+
+logger = logging.getLogger("ipx_logger")
 
 # Motor speeds for this library are specified as numbers
 # between -MAX_SPEED and MAX_SPEED, inclusive.
@@ -60,8 +64,12 @@ class Motors(object):
     MAX_SPEED = _max_speed
 
     def __init__(self):
+        logger.debug("Initiating motor control...")
         self.motor1 = Motor(12, 24, 22)
+        logger.debug("Motor 1 initiated!")
         self.motor2 = Motor(13, 25, 23)
+        logger.debug("Motor 2 initiated!")
+        logger.debug("Motor control initiated!")
 
     def enable(self):
         self.motor1.enable()
@@ -75,4 +83,3 @@ class Motors(object):
         self.motor1.setSpeed(m1_speed)
         self.motor2.setSpeed(m2_speed)
 
-motors = Motors()

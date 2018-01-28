@@ -151,6 +151,14 @@ class Host:
                 self.client.close()
                 self.client = None
 
+    def get_package_from_client(self):
+        """get_package_from_client
+            Get a package from client.
+        :return: package
+        """
+        package = self.client.recv(DEFAULT_BUFFER_SIZE)
+        return package
+
     def run_echo_mode(self):
         """run_echo_mode
             Server continuously receives data from client and echos it back
@@ -165,7 +173,7 @@ class Host:
         MAX_INVALID_DATA = 500
 
         while echo_mode:
-            data_from_client = self.client.recv(DEFAULT_BUFFER_SIZE).decode(self.encoding)
+            data_from_client = self.get_package_from_client().decode(self.encoding)
 
             if data_from_client is None:
                 invalid_data_counter += 1

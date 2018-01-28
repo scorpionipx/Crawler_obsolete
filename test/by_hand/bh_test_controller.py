@@ -9,9 +9,9 @@ control.connect_to_crawler()
 
 while True:
     user_input = input()
-    response = control.connection.send_package_and_get_response(user_input)
+    control.connection.send_package(user_input)
     if user_input == 'exit':
         break
-    print("Server's response: {}".format(response))
+
 
 

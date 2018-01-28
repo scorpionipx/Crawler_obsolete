@@ -3,6 +3,9 @@ import logging
 logger = logging.getLogger("ipx_logger")
 
 COMMAND_HEADER = 0
+HEADER_LITERAL = 'ipx_h:'
+ID_LITERAL = 'ipx_i:'
+VALUE_LITERAL = 'ipx_v:'
 
 
 class Command:
@@ -124,7 +127,7 @@ class Commands:
         self.drive = Command(
             cmd_id=1,
             name="drive",
-            description="Drive Crawler",
+            description="Drive Crawler.",
             in_code="drive",
             value_required=True,
         )
@@ -133,13 +136,65 @@ class Commands:
         self.steer = Command(
             cmd_id=2,
             name="steer",
-            description="Steer Crawler",
+            description="Steer Crawler.",
             in_code="steer",
             value_required=True,
         )
         self.all_commands.append(self.steer)
 
+        self.stop = Command(
+            cmd_id=3,
+            name='stop',
+            description='Stops motors',
+            in_code='stop',
+            value_required=False,
+        )
+        self.all_commands.append(self.stop)
+
+        self.enable_motor_control = Command(
+            cmd_id=4,
+            name='enable_motor_control',
+            description='Enables motor control.',
+            in_code='enable_motor_control',
+            value_required=False,
+        )
+        self.all_commands.append(self.enable_motor_control)
+
+        self.disable_motor_control = Command(
+            cmd_id=5,
+            name='disable_motor_control',
+            description='Disables motor control.',
+            in_code='disable_motor_control',
+            value_required=False,
+        )
+        self.all_commands.append(self.disable_motor_control)
+
+        self.exit = Command(
+            cmd_id=6,
+            name='exit',
+            description="Exit listening mode.",
+            in_code='exit',
+            value_required=False,
+        )
+        self.all_commands.append(self.exit)
+
         self.__check_for_duplicates__()
+
+        self.all_commands.sort()
+
+    def get_command_by_id(self, _id):
+        """get_command_by_id
+            Get a command specified by it's ID.
+        :param _id: command's ID as integer.
+        :return: Command object or None
+        """
+        matched_command = None
+        for command in self.all_commands:
+            if command.id == _id:
+                matched_command = command
+                break
+
+        return matched_command
 
     def __check_for_duplicates__(self):
         """

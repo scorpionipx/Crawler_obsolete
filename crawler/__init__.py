@@ -28,4 +28,4 @@ if LOG_TO_FILE:
 
     logger.addHandler(logger_file_handler)
 
-logger.info("Initiated logger")
+logger.debug("Initiated logger")

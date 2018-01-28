@@ -1,7 +1,7 @@
 import logging
 
 from crawler.utils.connection.client import Client
-from crawler.utils.commands import Command, Commands, COMMAND_HEADER
+from crawler.utils.commands import Command, Commands, COMMAND_HEADER, HEADER_LITERAL, ID_LITERAL, VALUE_LITERAL
 
 logger = logging.getLogger("ipx_logger")
 
@@ -28,7 +28,7 @@ class CrawlerController:
             Create package to be sent to Crawler
         :return:
         """
-        _package = 'h: ' + str(_header) + 'i: ' + str(_id) + 'v: ' + str(_value)
+        _package = HEADER_LITERAL + str(_header) + ID_LITERAL + str(_id) + VALUE_LITERAL + str(_value)
         return _package
 
     def send_command(self, command, value=None):
