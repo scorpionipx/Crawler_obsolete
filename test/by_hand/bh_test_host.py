@@ -1,7 +1,7 @@
 from crawler.utils.connection.host import Host
 
-
-host = Host()
+forced_ip = '192.168.0.101'
+host = Host(forced_ip=forced_ip)
 host.run_echo_mode()
 
 

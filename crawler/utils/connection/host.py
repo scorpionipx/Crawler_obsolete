@@ -11,7 +11,7 @@ class Host:
         Class used to handle internet connection on the crawler as host(slave).
     """
 
-    def __init__(self, port=DEFAULT_PORT, number_of_connections=DEFAULT_ALLOWED_CONNECTIONS):
+    def __init__(self, forced_ip=None, port=DEFAULT_PORT, number_of_connections=DEFAULT_ALLOWED_CONNECTIONS):
         """
             Constructor
         :param port: host's communication port as integer
@@ -29,24 +29,21 @@ class Host:
             self.name = py_socket.gethostname()
 
             # set host's ip address and port
-            self.ip = self.__get_host_ip_address__()
+            if forced_ip is None:
+                self.ip = self.__get_host_ip_address__()
+            else:
+                self.ip = forced_ip
             self.port = port
 
             # bind the socket to public interface
-            self.socket.bind((self.name, self.port))
+            if forced_ip is None:
+                self.socket.bind((self.name, self.port))
+            else:
+                self.socket.bind((forced_ip, self.port))
             logger.debug("{}, {}, {}".format(self.name, self.ip, self.port))
 
             # allow a specific number of connections
             self.socket.listen(number_of_connections)
-
-            # # initiate commands that can be sent by host
-            # self.commands = HostCommands()
-            #
-            # # initiate commands that can be sent by client
-            # self.client_commands = ClientCommands()
-            #
-            # # initiate data that can be send or received
-            # self.data = DataIPX()
 
             # client instance and attributes
             self.client = None
@@ -136,7 +133,7 @@ class Host:
         """
         client_is_valid = False
 
-        logger.info("Waiting for connection request...")
+        logger.info("Waiting for connection request at IP: {}".format(py_socket.gethostbyname(py_socket.gethostname())))
         while not client_is_valid:
 
             # establish a connection
@@ -161,13 +158,28 @@ class Host:
         """
         if self.client is None:
             self.connect_with_client()
-
         logger.debug("Echo mode enabled! Waiting for client's data...")
+
         echo_mode = True
+        invalid_data_counter = 0
+        MAX_INVALID_DATA = 500
+
         while echo_mode:
             data_from_client = self.client.recv(DEFAULT_BUFFER_SIZE).decode(self.encoding)
-            self.client.send(bytes(data_from_client, self.encoding))
+
+            if data_from_client is None:
+                invalid_data_counter += 1
+            else:
+                invalid_data_counter = 0
+
+            if invalid_data_counter >= MAX_INVALID_DATA:
+                logger.info("Echo mode stopped! Maximum invalid data received from client reached! [{}]".
+                            format(MAX_INVALID_DATA))
+                echo_mode = False
+
             logger.debug("Received package from host: {}".format(data_from_client))
+
+            self.client.send(bytes(data_from_client, self.encoding))
 
             if data_from_client == "exit":
                 echo_mode = False

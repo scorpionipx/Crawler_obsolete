@@ -11,17 +11,13 @@ class Client:
         Class used to handle internet connection on the crawler's controller as client(master).
     """
 
-    def __init__(self, host, port=DEFAULT_PORT, username=None, password=None):
+    def __init__(self, host, port=DEFAULT_PORT):
         """
             Constructor
         :param host: remote host's name or ip to connect to as string
                      example: '192.168.100.15'
         :param port: host's communication port as integer
                      example: 1369
-        :param username: client's username required for authentication as string
-                         example: 'RaspberryPIScorpionIPX'
-        :param password: client's password required for authentication as string
-                         example: 'Qwerty123'
         """
         try:
             logger.debug("Initiating client...")
@@ -32,19 +28,6 @@ class Client:
             # setting host and port
             self.host = host
             self.port = port
-
-            # setting credentials
-            self.username = username
-            self.password = password
-
-            # # initiate commands that can be sent by client
-            # self.commands = ClientCommands()
-            #
-            # # initiate commands that can be sent by host
-            # self.host_commands = HostCommands()
-            #
-            # # initiate data that can be send or received
-            # self.data = DataIPX()
 
             self.encoding = 'utf-8'
 

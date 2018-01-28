@@ -3,7 +3,7 @@ import os
 import time
 
 
-LOG_TO_FILE = True
+LOG_TO_FILE = False
 
 # create logger
 logger = logging.getLogger('ipx_logger')
