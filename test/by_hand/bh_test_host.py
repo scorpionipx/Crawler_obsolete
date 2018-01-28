@@ -1,8 +1,7 @@
-import asyncore
 from crawler.utils.connection.host import Host
 
 
 server = Host()
-asyncore.loop()
+server.run_echo_mode()
 
 

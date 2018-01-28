@@ -50,7 +50,6 @@ class Host:
 
             # client instance and attributes
             self.client = None
-            self.client_name = None
 
             # connection encoding
             self.encoding = 'utf-8'
@@ -130,6 +129,47 @@ class Host:
             encoding = self.encoding
         return bytes(_string, encoding)
 
+    def connect_with_client(self):
+        """
+            Connects with a connection requesting client.
+        :return: None
+        """
+        client_is_valid = False
 
+        logger.info("Waiting for connection request...")
+        while not client_is_valid:
+
+            # establish a connection
+            self.client, client_address = self.socket.accept()
+            logger.info("Got a connection request from " + str(client_address[0]))
+
+            client_is_valid = True
+            logger.info("Connected to {}!".format(client_address))
+
+            if client_is_valid:
+                pass
+            else:
+                logger.info("Unknown client connection request! Connection refused!")
+                self.client.shutdown(py_socket.SHUT_RDWR)
+                self.client.close()
+                self.client = None
+
+    def run_echo_mode(self):
+        """run_echo_mode
+            Server continuously receives data from client and echos it back
+        :return: None
+        """
+        if self.client is None:
+            self.connect_with_client()
+
+        logger.debug("Echo mode enabled! Waiting for client's data...")
+        echo_mode = True
+        while echo_mode:
+            data_from_client = self.socket.recv(DEFAULT_BUFFER_SIZE).decode(self.encoding)
+
+            logger.debug("Received package from host: {}".format(data_from_client))
+
+            if data_from_client == "exit":
+                echo_mode = False
 
 
