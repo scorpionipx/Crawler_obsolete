@@ -9,6 +9,7 @@ class Crawler:
         """Constructor
         """
         self.connection = Host()
+        
 
 
 

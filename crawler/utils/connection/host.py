@@ -1,6 +1,5 @@
 import logging
 import socket as py_socket
-import asyncore
 
 from crawler.utils.connection.utils.generic import *
 
@@ -35,6 +34,7 @@ class Host:
 
             # bind the socket to public interface
             self.socket.bind((self.name, self.port))
+            logger.debug("{}, {}, {}".format(self.name, self.ip, self.port))
 
             # allow a specific number of connections
             self.socket.listen(number_of_connections)
@@ -165,8 +165,8 @@ class Host:
         logger.debug("Echo mode enabled! Waiting for client's data...")
         echo_mode = True
         while echo_mode:
-            data_from_client = self.socket.recv(DEFAULT_BUFFER_SIZE).decode(self.encoding)
-
+            data_from_client = self.client.recv(DEFAULT_BUFFER_SIZE).decode(self.encoding)
+            self.client.send(bytes(data_from_client, self.encoding))
             logger.debug("Received package from host: {}".format(data_from_client))
 
             if data_from_client == "exit":
