@@ -7,17 +7,7 @@ from crawler.utils.connection.utils.generic import *
 logger = logging.getLogger('ipx_logger')
 
 
-class PackageIncomeHandler(asyncore.dispatcher_with_send):
-    """PackageIncomeHandler
-        Class used to asynchronously handle incoming data.
-    """
-    def handle_read(self):
-        data = self.recv(DEFAULT_BUFFER_SIZE)
-        if data:
-            self.send(data)
-
-
-class Host(asyncore.dispatcher):
+class Host:
     """Host
         Class used to handle internet connection on the crawler as host(slave).
     """
@@ -32,7 +22,6 @@ class Host(asyncore.dispatcher):
         """
         try:
             logger.debug("Initiating host...")
-            asyncore.dispatcher.__init__(self)
 
             # create the socket object
             self.socket = py_socket.socket(py_socket.AF_INET, py_socket.SOCK_STREAM)
@@ -71,13 +60,6 @@ class Host(asyncore.dispatcher):
         except Exception as err:
             error = 'Failed to initialize host! ' + str(err)
             logger.error(error)
-
-    def handle_accept(self):
-        pair = self.accept()
-        if pair is not None:
-            sock, address = pair
-            print('Incoming connection from {}'.format(address))
-            handler = PackageIncomeHandler(sock)
 
     def __get_host_ip_address__(self):
         """
