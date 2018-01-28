@@ -83,6 +83,35 @@ class CrawlerController:
 
         self.send_command(self.commands.drive, speed)
 
+    def drive(self, speed):
+        """drive
+            Tell Crawler to drive according to the specified speed. Positive speed - forward, negative speed - backward.
+        :param speed: Speed of the crawler as percentage (PWM duty cycle) - integer ranged [-100, 100].
+        :return: None
+        """
+        if speed > 100 or speed < -100:
+            logging.warning("Invalid speed value specified in drive! Integer in range [-100, 100] expected!")
+            return
+
+        speed *= 4.8  # max speed is 480 according to library for the Pololu Dual MC33926 Motor Driver for Raspberry Pi
+        speed = int(speed)
+
+        self.send_command(self.commands.drive, speed)
+
+    def steer(self, steering):
+        """steer
+            Tell Crawler to steer according to the specified steering power. Positive - steer right and vice-versa.
+        :param steering: Steering power - integer ranged [-100, 100].
+        :return: None
+        """
+        if steering > 100 or steering < -100:
+            logging.warning("Invalid steering value specified in steer! Integer in range [-100, 100] expected!")
+            return
+
+        steering *= 4.8  # max steer is 480 according to library for the Pololu Dual MC33926 Motor Driver for RPi
+        steering = int(steering)
+
+        self.send_command(self.commands.steer, steering)
 
 
 
