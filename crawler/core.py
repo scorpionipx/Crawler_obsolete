@@ -93,15 +93,16 @@ class Crawler:
 
         logger.debug("Speaking [{}]".format(speech))
 
-        # reactivate_motor_control = False
-        # if self.motors.enabled:
-        #     self.disable_motor_control()
-        #     reactivate_motor_control = True
+        reactivate_motor_control = False
+        if self.motors.enabled:
+            self.disable_motor_control()
+            reactivate_motor_control = True
 
         gtts_speak(speech, language)
 
-        # if reactivate_motor_control:
-        #     self.enable_motor_control()
+        if reactivate_motor_control:
+            self.motors.gpio_init()
+            self.enable_motor_control()
 
     def decode_client_command(self, package):
         """decode_client_command

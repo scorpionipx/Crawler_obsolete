@@ -21,7 +21,7 @@ def speak(speech, language):
         os_cmd = AUDIO_FILE
 
     os_cmd = os_cmd.split()
-    subprocess.call(os_cmd, shell=True)
+    cmd_output = (subprocess.run(os_cmd, stdout=subprocess.PIPE)).stdout.decode('utf-8)')
 
 
 def speak_obsolete(speech, language):

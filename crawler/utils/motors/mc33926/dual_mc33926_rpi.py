@@ -73,6 +73,7 @@ class Motors(object):
         self.enabled = False
 
     def gpio_init(self):
+
         io_init()
 
     def enable(self):
@@ -83,6 +84,7 @@ class Motors(object):
     def disable(self):
         self.motor1.disable()
         self.motor2.disable()
+        wiringpi.GPIO.cleanup()
         self.enabled = False
 
     def setSpeeds(self, m1_speed, m2_speed):
