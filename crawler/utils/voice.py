@@ -21,8 +21,18 @@ def speak(speech, language):
         os_cmd = AUDIO_FILE
 
     os_cmd = os_cmd.split()
-    cmd_output = (subprocess.run(os_cmd, stdout=subprocess.PIPE)).stdout.decode('utf-8)')
+    subprocess.call(os_cmd, shell=True)
 
 
+def speak_obsolete(speech, language):
+    if platform.system() == 'Windows':
+        text_to_speech = gTTS(text=speech, lang=language)
+        text_to_speech.save(AUDIO_FILE)
+        os_cmd = AUDIO_FILE
+    elif platform.system() == 'Linux':
+        os_cmd = 'espeak ' + "\"" + speech + "\""
+
+    # os_cmd = os_cmd.split()
+    subprocess.call(os_cmd, shell=True)
 
 
