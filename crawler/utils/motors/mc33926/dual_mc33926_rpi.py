@@ -70,14 +70,20 @@ class Motors(object):
         self.motor2 = Motor(13, 25, 23)
         logger.debug("Motor 2 initiated!")
         logger.debug("Motor control initiated!")
+        self.enabled = False
+
+    def gpio_init(self):
+        io_init()
 
     def enable(self):
         self.motor1.enable()
         self.motor2.enable()
+        self.enabled = True
 
     def disable(self):
         self.motor1.disable()
         self.motor2.disable()
+        self.enabled = False
 
     def setSpeeds(self, m1_speed, m2_speed):
         self.motor1.setSpeed(m1_speed)

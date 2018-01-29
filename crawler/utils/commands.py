@@ -178,6 +178,15 @@ class Commands:
         )
         self.all_commands.append(self.exit)
 
+        self.speak = Command(
+            cmd_id=7,
+            name='speak',
+            description="Speak provided text",
+            in_code='speak',
+            value_required=True,
+        )
+        self.all_commands.append(self.speak)
+
         self.__check_for_duplicates__()
 
         self.all_commands.sort()

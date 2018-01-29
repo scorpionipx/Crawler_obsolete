@@ -53,6 +53,8 @@ class CrawlerController:
         package = self.__create_package__(COMMAND_HEADER, command.id, value)
         self.connection.send_package(package)
 
+        logger.debug("Command package [{}] sent!".format(package))
+
     def drive_forward(self, speed):
         """drive_forward
             Tell Crawler to drive forward according to the specified speed.
@@ -112,6 +114,28 @@ class CrawlerController:
         steering = int(steering)
 
         self.send_command(self.commands.steer, steering)
+
+    def speak(self, speech):
+        """speak
+            Tell Crawler to speak.
+        :param speech: text to be spoken.
+        :return: None
+        """
+        self.send_command(self.commands.speak, speech)
+
+    def enable_motor_control(self):
+        """enable_motor_control
+            Tell Crawler to enable motor control.
+        :return: None
+        """
+        self.send_command(self.commands.enable_motor_control)
+
+    def disable_motor_control(self):
+        """disable_motor_control
+            Tell Crawler to disable motor control.
+        :return: None
+        """
+        self.send_command(self.commands.disable_motor_control)
 
 
 

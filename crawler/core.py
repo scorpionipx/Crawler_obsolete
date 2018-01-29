@@ -4,6 +4,7 @@ from crawler.utils.connection.host import Host
 from crawler.utils.connection.utils.generic import DEFAULT_PORT
 from crawler.utils.commands import Command, Commands, COMMAND_HEADER, HEADER_LITERAL, ID_LITERAL, VALUE_LITERAL
 from crawler.utils.motors.mc33926.dual_mc33926_rpi import Motors
+from crawler.utils.voice import speak as gtts_speak, LANGUAGE_LITERAL
 
 logger = logging.getLogger('ipx_logger')
 
@@ -81,6 +82,27 @@ class Crawler:
         logger.debug("Motor control enabled!")
         self.motors.enable()
 
+    def speak(self, text):
+        """speak
+            Speak provided speech.
+        :param text: text to be spoken as string.
+        :return: None
+        """
+        speech = text[:text.find(LANGUAGE_LITERAL)]
+        language = text[text.find(LANGUAGE_LITERAL) + len(LANGUAGE_LITERAL):]
+
+        logger.debug("Speaking [{}]".format(speech))
+
+        # reactivate_motor_control = False
+        # if self.motors.enabled:
+        #     self.disable_motor_control()
+        #     reactivate_motor_control = True
+
+        gtts_speak(speech, language)
+
+        # if reactivate_motor_control:
+        #     self.enable_motor_control()
+
     def decode_client_command(self, package):
         """decode_client_command
             Decodes packages sent by client. Packages should be intended
@@ -153,9 +175,11 @@ class Crawler:
         elif command.id == self.commands.disable_motor_control.id:
             self.disable_motor_control()
 
-        elif command.id == self.commands.exit:
+        elif command.id == self.commands.exit.id:
             self.__listening__ = False
 
+        elif command.id == self.commands.speak.id:
+            self.speak(value)
 
 
 

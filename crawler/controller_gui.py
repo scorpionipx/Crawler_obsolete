@@ -2,10 +2,13 @@ import sys
 import logging
 from time import sleep
 
-from PyQt5.QtWidgets import QWidget, QMessageBox, QApplication, QDesktopWidget, QSlider, QLineEdit, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget, QMessageBox, QApplication, QDesktopWidget, QSlider, QLineEdit, QLabel, \
+    QPushButton, QComboBox, QTextEdit
+
 from PyQt5.QtCore import Qt
 
 from crawler.controller import CrawlerController
+from crawler.utils.voice import LANGUAGE_LITERAL
 
 
 logger = logging.getLogger("ipx_logget")
@@ -62,6 +65,65 @@ class ControllerGUI(QWidget):
         self.__create_crawler_ip_line_edit__()
         self.__create_crawler_port_line_edit__()
         self.__create_connect_button__()
+        self.__create_speech_line_edit__()
+        self.__create_select_language_combobox__()
+        self.__create_speak_button__()
+        self.__create_enable_motors_button()
+        self.__create_disable_motors_button()
+
+    def __create_enable_motors_button(self):
+        """__create_enable_motors_button
+            Button used to tell Crawler to enable motor control.
+        :return: None
+        """
+        self.enable_motors_button = QPushButton(self)
+        self.enable_motors_button.setText("Enable motor control")
+        self.enable_motors_button.move(550, 300)
+        self.enable_motors_button.show()
+        self.enable_motors_button.clicked.connect(self.enable_motor_control)
+
+    def __create_disable_motors_button(self):
+        """__create_disable_motors_button
+            Button used to tell Crawler to disable motor control.
+        :return: None
+        """
+        self.disable_motors_button = QPushButton(self)
+        self.disable_motors_button.setText("Disable motor control")
+        self.disable_motors_button.move(660, 300)
+        self.disable_motors_button.show()
+        self.disable_motors_button.clicked.connect(self.disable_motor_control)
+
+    def __create_speech_line_edit__(self):
+        """__create_speech_line_edit__
+            Create the line edit used to store as text the speech for Crawler.
+        :return: None
+        """
+        self.speech_text_edit = QTextEdit(self)
+        self.speech_text_edit.move(10, 200)
+        self.speech_text_edit.resize(400, 80)
+        self.speech_text_edit.show()
+
+    def __create_select_language_combobox__(self):
+        """__create_select_language_combobox__
+            Creates the combobox used to select Crawler's speech language.
+        :return: None
+        """
+        self.language_select_combobox = QComboBox(self)
+        self.language_select_combobox.move(10, 290)
+        self.language_select_combobox.addItem('en')
+        self.language_select_combobox.addItem('ro')
+        self.language_select_combobox.show()
+
+    def __create_speak_button__(self):
+        """__create_speak_button__
+            Creates the button used to tell Crawler to speak provided text.
+        :return: None
+        """
+        self.speak_button = QPushButton(self)
+        self.speak_button.move(336, 289)
+        self.speak_button.setText('Speak')
+        self.speak_button.clicked.connect(self.speak)
+        self.speak_button.show()
 
     def __create_connect_button__(self):
         """__create_connect_button__
@@ -158,6 +220,34 @@ class ControllerGUI(QWidget):
         """
         steering = int(self.steer_slider.value())
         self.control.steer(steering)
+
+    def enable_motor_control(self):
+        """enable_motor_control
+            Tell Crawler to enable motor control.
+        :return: None
+        """
+        self.control.enable_motor_control()
+
+    def disable_motor_control(self):
+        """disable_motor_control
+            Tell Crawler to disable motor control.
+        :return: None
+        """
+        self.control.disable_motor_control()
+
+    def speak(self):
+        """speak
+            Tell Crawler to speak.
+        :return: None
+        """
+        speech = self.speech_text_edit.toPlainText()
+        language = str(self.language_select_combobox.currentText())
+
+        speech += LANGUAGE_LITERAL
+        speech += language
+
+        self.control.speak(speech)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
