@@ -199,11 +199,14 @@ class ControllerGUI(QWidget):
             port = int(port)
         except Exception as err:
             logger.warning("Invalid port: {}".format(port))
-        self.control = CrawlerController(ip, port)
-        self.control.connect_to_crawler()
+        try:
+            self.control = CrawlerController(ip, port)
+            self.control.connect_to_crawler()
 
-        sleep(1)
-        self.control.send_command(self.control.commands.enable_motor_control)
+            sleep(1)
+            # self.control.send_command(self.control.commands.enable_motor_control)
+        except Exception as err:
+            print('Error on connect: ' + str(err))
 
     def drive(self):
         """drive
